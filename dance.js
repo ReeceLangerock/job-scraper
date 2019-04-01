@@ -36,14 +36,44 @@ router.get("/", async function(req, res, next) {
   console.log("grabbing results");
 
   const results = await page.$$(".list .list-item");
+  const temp = {};
 
   for (const result of results) {
     // pass the single handle below
     const title = await page.evaluate(el => el.querySelector(".title").innerText, result);
+    const jobID = title
+      .split("JobID")[1]
+      .split(":")[0]
+      .trim();
     const datePosted = await page.evaluate(
       el => el.querySelector(".flex.subtitle.subtitle-right.ellipsis").innerText,
       result
     );
+
+    //mongo check for posting
+    console.log("clicking result");
+    await result.click();
+    await page.waitFor(250);
+
+    if (true) {
+      try {
+        console.log("clicking on post details");
+
+        //   const postingDetails = await page.$$(".job-overview");
+        const link = await page.$eval(".job-overview .job-overview-visit-page", el => el.href);
+        const desc = await page.$eval(".job-overview .job-details-header", el => el.innerHTML);
+        temp[jobID] = {
+          title,
+          datePosted,
+          link,
+          desc
+        };
+        console.log(link);
+        console.log(desc);
+      } catch (e) {
+        console.error("indiviual post click failed");
+      }
+    }
 
     // do whatever you want with the data
     console.log(title, datePosted);
@@ -52,7 +82,7 @@ router.get("/", async function(req, res, next) {
   await page.screenshot({ path: "example.png" });
 
   await browser.close();
-  res.json({ true: true });
+  res.json({ results: temp });
 });
 
 module.exports = router;
