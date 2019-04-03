@@ -1,3 +1,7 @@
+const puppeteer = require('puppeteer');
+const JobPost = require('./JobPost');
+const EmailHandler = require('./emailHandler');
+
 async function deployThePuppets() {
 	var newPostings = [];
 
