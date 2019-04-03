@@ -5,6 +5,12 @@ const JobPost = require('./JobPost');
 const EmailHandler = require('./emailHandler');
 
 router.get('/', async function(req, res, next) {
+	await deployThePuppets();
+
+	res.json({ results: newPostings });
+});
+
+async function deployThePuppets() {
 	var newPostings = [];
 
 	if (newPostings.length) {
@@ -16,12 +22,10 @@ router.get('/', async function(req, res, next) {
 	if (newPostings.length) {
 		console.log(`found ${newPostings.length} new postings, sending email...`);
 		EmailHandler(newPostings);
+	} else {
+		console.log('no new posts found, shutting it down...');
 	}
-
-	console.log('no new posts found, shutting it down...');
-
-	res.json({ results: newPostings });
-});
+}
 
 async function masterOfPuppets(zipCode, newPostings) {
 	console.log(`\nrunning search for zip code ${zipCode}...\n`);
