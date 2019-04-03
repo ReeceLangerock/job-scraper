@@ -5,7 +5,7 @@ const JobPost = require('./JobPost');
 const EmailHandler = require('./emailHandler');
 
 router.get('/', async function(req, res, next) {
-	await deployThePuppets();
+	const newPostings = await deployThePuppets();
 
 	res.json({ results: newPostings });
 });
@@ -25,6 +25,7 @@ async function deployThePuppets() {
 	} else {
 		console.log('no new posts found, shutting it down...');
 	}
+	return newPostings;
 }
 
 async function masterOfPuppets(zipCode, newPostings) {
