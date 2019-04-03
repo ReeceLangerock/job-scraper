@@ -59,13 +59,13 @@ async function masterOfPuppets(zipCode, newPostings) {
 			.trim();
 		console.log(`checking job: ${jobID}`);
 		// Check if this job post is in the database
-		const POST;
+		var POST;
 		try {
 			POST = await JobPost.findById({ _id: jobID });
 			await result.click();
 			await page.waitFor(250);
 		} catch (e) {
-			console.log('error finding post')
+			console.log('error finding post');
 			console.log(e);
 		}
 		if (!POST) {
@@ -98,9 +98,9 @@ async function masterOfPuppets(zipCode, newPostings) {
 			} catch (e) {
 				console.log(e);
 			}
-		} 
-    }
-    if (!newPostings.length) {
+		}
+	}
+	if (!newPostings.length) {
 		console.log('no new posts found with these search parameters');
 	}
 	await browser.close();

@@ -68,13 +68,13 @@ async function masterOfPuppets(zipCode, newPostings) {
 			.trim();
 
 		// Check if this job post is in the database
-		const POST;
+		var POST;
 		try {
 			POST = await JobPost.findById({ _id: jobID });
 			await result.click();
 			await page.waitFor(250);
 		} catch (e) {
-			console.log('error finding post')
+			console.log('error finding post');
 			console.log(e);
 		}
 
