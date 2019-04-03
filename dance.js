@@ -12,11 +12,19 @@ router.get('/', async function(req, res, next) {
 	}
 
 	newPostings = await masterOfPuppets('60532', newPostings);
-	//   masterOfPuppets("60439");
+	newPostings = await masterOfPuppets('60439', newPostings);
+	if (newPostings.length) {
+		console.log(`found ${newPostings.length} new postings, sending email...`);
+		EmailHandler(newPostings);
+	}
+
+	console.log('no new posts found, shutting it down...');
+
 	res.json({ results: newPostings });
 });
 
 async function masterOfPuppets(zipCode, newPostings) {
+	console.log(`\nrunning search for zip code ${zipCode}...\n`);
 	// navigate puppeteer to the site
 	console.log('loading the page..');
 	const browser = await puppeteer.launch();
@@ -95,8 +103,6 @@ async function masterOfPuppets(zipCode, newPostings) {
 		// do whatever you want with the data
 	}
 	await browser.close();
-	console.log(newPostings);
-	EmailHandler(newPostings);
 	return newPostings;
 }
 

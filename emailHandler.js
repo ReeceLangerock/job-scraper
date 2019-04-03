@@ -2,17 +2,28 @@
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
+const texts = require('./randomText');
 
 function buildEmailBody(data) {
-	let emailBody = '<div><b>Hi Hun, my robots found some new job postings for you</b>';
+	try {
+		const randomGreeting = texts.greetings[Math.floor(Math.random() * texts.greetings.length)];
+		const randomEnding = texts.endings[Math.floor(Math.random() * texts.endings.length)];
+		let emailBody = `${randomGreeting}`;
 
-	data.forEach(post => {
-		const title = `<h1>${post.title}</h1>`;
-		const link = `<a href = ${post.link}>Link To Job</a>`;
-		emailBody += `<hr/>${title}${link}`;
-	});
-	emailBody += '</div>';
-	return emailBody;
+		data.forEach(post => {
+			const title = `<div style = "border: 1px solid #C9DDFF; background: #E1ECFF; padding: 0 10px; margin-top: 10px; border-radius: 3px;"><h2>${
+				post.title
+			}</h2>`;
+			const link = `<a href = ${post.link} style = "font-size: 16px">Link To Job</a>`;
+			const datePosted = `<p><b>Posted:</b> ${post.datePosted}</p>`;
+			const desc = `<br/><div>${post.description}</div></div>`;
+			emailBody += `${title}${datePosted}${link}${desc}`;
+		});
+		emailBody += `<br/>${randomEnding}</div>`;
+		return emailBody;
+	} catch (e) {
+		console.log(e);
+	}
 }
 
 // async..await is not allowed in global scope, must use a wrapper
@@ -48,11 +59,11 @@ async function sendEmail(data) {
 	// setup email data with unicode symbols
 
 	const emailBody = buildEmailBody(data);
-	console.log(emailBody);
+	const job = data.length > 1 ? 'Jobs' : 'Job';
 	let mailOptions = {
-		from: '"Fred Foo 👻" <foo@example.com>', // sender address
+		from: `"Reece's Robot Minions" <foo@example.com>`, // sender address
 		to: process.env.EMAIL_TO, // list of receivers
-		subject: 'New Jobs Posted To K12 Jobspot', // Subject line
+		subject: `${data.length} New ${job} Posted To K12 Jobspot`, // Subject line
 		text: 'Hello world?', // plain text body
 		html: emailBody // html body
 	};
