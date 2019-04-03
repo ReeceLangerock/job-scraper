@@ -57,7 +57,7 @@ async function masterOfPuppets(zipCode, newPostings) {
 			.split('JobID')[1]
 			.split(':')[0]
 			.trim();
-
+		console.log(`checking job: ${jobID}`);
 		// Check if this job post is in the database
 		const POST = await JobPost.findById({ _id: jobID });
 		await result.click();
