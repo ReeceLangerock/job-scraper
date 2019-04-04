@@ -23,7 +23,15 @@ async function masterOfPuppets(zipCode, newPostings) {
 	console.log(`\nrunning search for zip code ${zipCode}...\n`);
 	// navigate puppeteer to the site
 	console.log('loading the page..');
-	const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'] });
+	const browser = await puppeteer.launch({
+		headless: true,
+		args: [
+		  '--no-sandbox',
+		  '--disable-setuid-sandbox',
+		  '--disable-dev-shm-usage',
+		  '--single-process'
+		],
+	  });
 	const page = await browser.newPage();
 	await page.goto('https://www.k12jobspot.com/Search/Opportunities');
 
