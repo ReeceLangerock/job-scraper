@@ -51,10 +51,13 @@ async function masterOfPuppets(zipCode, newPostings) {
 
   // The page displays a modal for unauthenticated users, so we shake the mouse to get it to appear and then close it
   console.log("shaking the mouse...");
-  await page.mouse.move(100, 100);
-  await page.waitFor(1 * 1000);
-  await page.click(".close-container button");
-  await page.waitFor(1 * 500);
+  try {
+
+    await page.mouse.move(100, 100);
+    await page.waitFor(1 * 1000);
+    await page.click(".close-container button");
+    await page.waitFor(1 * 500);
+  } catch(e){ console.log(e)}
 
   // select the input fields and add our search parameters
   console.log("adding search parameters...");
